@@ -1,6 +1,6 @@
 <template>
   <div class="map">
-    Map goes here...<br>
+    
     {{ msg }}<br>
 
     <div style="width: 100%; height: 480px" id="mapContainer"></div>
@@ -18,9 +18,9 @@ export default {
       'app_id': process.env.VUE_APP_HERE_APP_ID,
       'app_code': process.env.VUE_APP_HERE_APP_CODE
     });
-    var lat_default = 51.501527
-    var lng_default = -0.1921837
-    var zoom_default =10
+    var lat_default = 51.520763
+    var lng_default = -0.102138
+    var zoom_default =14
     var defaultLayers = platform.createDefaultLayers();
     var map = new H.Map(
       document.getElementById('mapContainer'),
