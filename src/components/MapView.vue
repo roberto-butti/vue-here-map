@@ -28,7 +28,11 @@ export default {
       {
         zoom: zoom_default,
         center: { lat: lat_default, lng: lng_default }
-      });
+      }
+    );
+    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+    var ui = H.ui.UI.createDefault(map, defaultLayers);
+
   }
 }
 </script>
