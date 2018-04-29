@@ -33,6 +33,20 @@ export default {
     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
     var ui = H.ui.UI.createDefault(map, defaultLayers);
 
+    this.useMetricMeasurements(map, defaultLayers);
+
+    
+
+  },
+  methods: {
+    useImperialMeasurements: function (map, defaultLayers) {
+      var ui = H.ui.UI.createDefault(map, defaultLayers);
+      ui.setUnitSystem(H.ui.UnitSystem.IMPERIAL);
+    },
+    useMetricMeasurements: function (map, defaultLayers) {
+      var ui = H.ui.UI.createDefault(map, defaultLayers);
+      ui.setUnitSystem(H.ui.UnitSystem.METRIC);
+    }
   }
 }
 </script>
