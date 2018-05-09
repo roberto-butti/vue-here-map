@@ -2,6 +2,7 @@
   <div class="map">
     
     {{ msg }}<br>
+    <button v-on:click="switchLayerTraffic">Traffic</button>
 
     <div style="width: 100%; height: 480px" id="mapContainer"></div>
   </div>
@@ -16,6 +17,14 @@ export default {
   props: {
     msg: String
   },
+  data: function () {
+    return {
+      map: null,
+      behavior: null,
+      ui: null,
+      defaultLayers: null
+    }
+  },
   mounted: function () {
     var platform = new H.service.Platform({
       'app_id': process.env.VUE_APP_HERE_APP_ID,
@@ -24,24 +33,27 @@ export default {
     var lat_default = 51.520763
     var lng_default = -0.102138
     var zoom_default =14
-    var defaultLayers = platform.createDefaultLayers();
-    var map = new H.Map(
+    this.defaultLayers = platform.createDefaultLayers();
+    this.map = new H.Map(
       document.getElementById('mapContainer'),
-      defaultLayers.normal.map,
+      this.defaultLayers.normal.map,
       {
         zoom: zoom_default,
         center: { lat: lat_default, lng: lng_default }
       }
     );
-    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-    var ui = H.ui.UI.createDefault(map, defaultLayers);
+    this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
+    this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
 
-    this.useMetricMeasurements(map, defaultLayers);
+    this.useMetricMeasurements(this.map, this.defaultLayers);
 
     
 
   },
   methods: {
+    switchLayerTraffic: function () {
+        this.map.setBaseLayer(this.defaultLayers.satellite.traffic)
+    },
     useImperialMeasurements: function (map, defaultLayers) {
       var ui = H.ui.UI.createDefault(map, defaultLayers);
       ui.setUnitSystem(H.ui.UnitSystem.IMPERIAL);
