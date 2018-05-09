@@ -2,7 +2,8 @@
   <div class="map">
     
     {{ msg }}<br>
-    <button v-on:click="switchLayerTraffic">Traffic</button>
+    <button v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button>
+    <button v-on:click="switchLayerNormalTraffic">Normal Traffic</button>
 
     <div style="width: 100%; height: 480px" id="mapContainer"></div>
   </div>
@@ -51,9 +52,13 @@ export default {
 
   },
   methods: {
-    switchLayerTraffic: function () {
+    switchLayerNormalTraffic: function () {
+        this.map.setBaseLayer(this.defaultLayers.normal.traffic)
+    },
+    switchLayerSatelliteTraffic: function () {
         this.map.setBaseLayer(this.defaultLayers.satellite.traffic)
     },
+
     useImperialMeasurements: function (map, defaultLayers) {
       var ui = H.ui.UI.createDefault(map, defaultLayers);
       ui.setUnitSystem(H.ui.UnitSystem.IMPERIAL);
