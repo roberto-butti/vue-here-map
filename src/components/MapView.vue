@@ -8,6 +8,9 @@
 </template>
 
 <script>
+
+var H = window.H
+
 export default {
   name: 'MapView',
   props: {
