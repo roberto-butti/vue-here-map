@@ -1,16 +1,16 @@
 <template>
   <div class="map">
     
-    {{ msg }}<br>
+    {{ msg }}<br>{{ lat }},{{ lng }}
     <button v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button>
     <button v-on:click="switchLayerNormalTraffic">Normal Traffic</button>
-
+    <button v-on:click="geolocateme">Find me :)</button>
     <div style="width: 100%; height: 480px" id="mapContainer"></div>
   </div>
 </template>
 
 <script>
-
+import axios from 'axios';
 var H = window.H
 
 export default {
@@ -23,7 +23,9 @@ export default {
       map: null,
       behavior: null,
       ui: null,
-      defaultLayers: null
+      defaultLayers: null,
+      lat: 51.520763,
+      lng: -0.102138
     }
   },
   mounted: function () {
@@ -31,8 +33,6 @@ export default {
       'app_id': process.env.VUE_APP_HERE_APP_ID,
       'app_code': process.env.VUE_APP_HERE_APP_CODE
     });
-    var lat_default = 51.520763
-    var lng_default = -0.102138
     var zoom_default =14
     this.defaultLayers = platform.createDefaultLayers();
     this.map = new H.Map(
@@ -40,7 +40,7 @@ export default {
       this.defaultLayers.normal.map,
       {
         zoom: zoom_default,
-        center: { lat: lat_default, lng: lng_default }
+        center: { lat: this.lat, lng: this.lng }
       }
     );
     this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
@@ -52,6 +52,23 @@ export default {
 
   },
   methods: {
+    updateCenter: function () {
+      var coords = {lat: this.lat, lng: this.lng}
+      this.map.setCenter(coords)
+    },
+    geoSetPosition: function (position) {
+      console.log(position)
+      this.lat = position.coords.latitude
+      this.lng = position.coords.longitude
+      this.updateCenter()
+    },
+    geolocateme: function () {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(this.geoSetPosition);
+      } else { 
+          this.msg = "Geolocation is not supported by this browser.";
+      }
+    },
     switchLayerNormalTraffic: function () {
         this.map.setBaseLayer(this.defaultLayers.normal.traffic)
     },
