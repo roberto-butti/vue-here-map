@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img class="logo" src="./assets/logo.png">
-    <MapView msg="Map HERE" />
+    <MapView  />
   </div>
 </template>
 

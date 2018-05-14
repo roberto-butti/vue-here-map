@@ -15,26 +15,26 @@ var H = window.H
 
 export default {
   name: 'MapView',
-  props: {
-    msg: String
-  },
+
   data: function () {
     return {
+      platform: null,
       map: null,
       behavior: null,
       ui: null,
       defaultLayers: null,
       lat: 51.520763,
-      lng: -0.102138
+      lng: -0.102138,
+      msg: "..."
     }
   },
   mounted: function () {
-    var platform = new H.service.Platform({
+    this.platform = new H.service.Platform({
       'app_id': process.env.VUE_APP_HERE_APP_ID,
       'app_code': process.env.VUE_APP_HERE_APP_CODE
     });
     var zoom_default =14
-    this.defaultLayers = platform.createDefaultLayers();
+    this.defaultLayers = this.platform.createDefaultLayers();
     this.map = new H.Map(
       document.getElementById('mapContainer'),
       this.defaultLayers.normal.map,
@@ -52,6 +52,24 @@ export default {
 
   },
   methods: {
+    reverseGeocodingSuccess: function (result) {
+      var location = result.Response.View[0].Result[0]
+      this.msg = location.Location.Address.Label
+    },
+    reverseGeocoding: function () {
+      var reverseGeocodingParameters = {
+        prox: ''+this.lat+','+this.lng+',150',
+        mode: 'retrieveAddresses',
+        maxresults: 1
+      }
+      var geocoder = this.platform.getGeocodingService()
+      geocoder.reverseGeocode(
+        reverseGeocodingParameters,
+        this.reverseGeocodingSuccess,
+        function(e) { this.msg = e });
+
+
+    },
     updateCenter: function () {
       var coords = {lat: this.lat, lng: this.lng}
       this.map.setCenter(coords)
@@ -61,6 +79,7 @@ export default {
       this.lat = position.coords.latitude
       this.lng = position.coords.longitude
       this.updateCenter()
+      this.reverseGeocoding()
     },
     geolocateme: function () {
       if (navigator.geolocation) {
