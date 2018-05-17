@@ -59,20 +59,34 @@ export default {
   methods: {
     loadgpx: function () {
       this.msg="Load GPX..."
-      axios.get('https://gist.githubusercontent.com/cly/bab1a4f982d43bcc53ff32d4708b8a77/raw/68f4f73aa30a7bdc4100395e8bf18bf81e1f6377/sample.gpx')
+      axios.get('http://localhost:8081/2710885.gpx')
       .then(response => {
         var self = this
         var text = response.data
         console.log(text)
         var parser = new DOMParser()
         var xmlDoc = parser.parseFromString(text,"text/xml")
-        var wpts = xmlDoc.getElementsByTagName("wpt")
+        var wpts = xmlDoc.getElementsByTagName("trkpt")
+        var points=[]
+        var point={}
         for (var i = wpts.length - 1; i >= 0; i--) {
-           console.log(wpts[i].getAttribute("lat"))
-           console.log(wpts[i].getAttribute("lon"))
-
+           point = { lat: wpts[i].getAttribute("lat"), lng: wpts[i].getAttribute("lon") }
+           points.push(point)
 
         }
+        var linestring = new H.geo.LineString();
+        points.forEach(function(point) {
+          linestring.pushPoint(point);
+        });
+
+        // Initialize a polyline with the linestring:
+        var polyline = new H.map.Polyline(linestring, { style: { lineWidth: 3 }});
+
+        // Add the polyline to the map:
+        this.map.addObject(polyline);
+
+        // Zoom the map to make sure the whole polyline is visible:
+        this.map.setViewBounds(polyline.getBounds());
 
         /*
         parseString(response.data, function (err, result) {
