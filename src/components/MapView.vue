@@ -5,6 +5,7 @@
     <button v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button>
     <button v-on:click="switchLayerNormalTraffic">Normal Traffic</button>
     <button v-on:click="geolocateme">Find me :)</button>
+    <button v-on:click="loadgpx">Load GPX</button>
     <div style="width: 100%; height: 480px" id="mapContainer"></div>
   </div>
 </template>
@@ -12,6 +13,7 @@
 <script>
 import axios from 'axios';
 var H = window.H
+var parser = new DOMParser()
 
 export default {
   name: 'MapView',
@@ -33,6 +35,8 @@ export default {
       'app_id': process.env.VUE_APP_HERE_APP_ID,
       'app_code': process.env.VUE_APP_HERE_APP_CODE
     });
+    //this.platform.configure(H.map.render.panorama.RenderEngine)
+
     var zoom_default =14
     this.defaultLayers = this.platform.createDefaultLayers();
     this.map = new H.Map(
@@ -40,7 +44,8 @@ export default {
       this.defaultLayers.normal.map,
       {
         zoom: zoom_default,
-        center: { lat: this.lat, lng: this.lng }
+        center: { lat: this.lat, lng: this.lng },
+        //engineType: H.Map.EngineType.PANORAMA
       }
     );
     this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
@@ -52,6 +57,33 @@ export default {
 
   },
   methods: {
+    loadgpx: function () {
+      this.msg="Load GPX..."
+      axios.get('https://gist.githubusercontent.com/cly/bab1a4f982d43bcc53ff32d4708b8a77/raw/68f4f73aa30a7bdc4100395e8bf18bf81e1f6377/sample.gpx')
+      .then(response => {
+        var self = this
+        var text = response.data
+        console.log(text)
+        var parser = new DOMParser()
+        var xmlDoc = parser.parseFromString(text,"text/xml")
+        var wpts = xmlDoc.getElementsByTagName("wpt")
+        for (var i = wpts.length - 1; i >= 0; i--) {
+           console.log(wpts[i].getAttribute("lat"))
+           console.log(wpts[i].getAttribute("lon"))
+
+
+        }
+
+        /*
+        parseString(response.data, function (err, result) {
+          console.log(result)
+          this.msg="Position: "+this.lat+ " "+this.lng
+        })
+        */        
+      })
+    
+      
+    },
     reverseGeocodingSuccess: function (result) {
       var location = result.Response.View[0].Result[0]
       this.msg = location.Location.Address.Label
@@ -79,11 +111,14 @@ export default {
       this.lat = position.coords.latitude
       this.lng = position.coords.longitude
       this.updateCenter()
+      this.msg = "Found on: "+this.lat+" "+this.lng
       this.reverseGeocoding()
     },
     geolocateme: function () {
       if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(this.geoSetPosition);
+          this.msg = "Finding you"
+          navigator.geolocation.getCurrentPosition(this.geoSetPosition)
+
       } else { 
           this.msg = "Geolocation is not supported by this browser.";
       }
