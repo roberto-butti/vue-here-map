@@ -1,6 +1,6 @@
 <template>
   <div class="map">
-    
+
     {{ msg }}<br>{{ lat }},{{ lng }}
     <button v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button>
     <button v-on:click="switchLayerNormalTraffic">Normal Traffic</button>
@@ -11,7 +11,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
+import moment from 'moment'
+
 var H = window.H
 var parser = new DOMParser()
 
@@ -53,27 +55,64 @@ export default {
 
     this.useMetricMeasurements(this.map, this.defaultLayers);
 
-    
+
 
   },
   methods: {
+    getDistanceFromLatLonInKm: function (lat1,lon1,lat2,lon2) {
+      var R = 6371 // Radius of the earth in km
+      var dLat = this.deg2rad(lat2-lat1)  // deg2rad below
+      var dLon = this.deg2rad(lon2-lon1)
+      var a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ;
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+      var d = R * c // Distance in km
+      return d;
+    },
+
+    deg2rad: function (deg) {
+      return deg * (Math.PI/180)
+    },
+
+
     loadgpx: function () {
       this.msg="Load GPX..."
       axios.get('http://localhost:8081/2710885.gpx')
       .then(response => {
         var self = this
         var text = response.data
-        console.log(text)
+        //console.log(text)
         var parser = new DOMParser()
         var xmlDoc = parser.parseFromString(text,"text/xml")
         var wpts = xmlDoc.getElementsByTagName("trkpt")
         var points=[]
         var point={}
-        for (var i = wpts.length - 1; i >= 0; i--) {
-           point = { lat: wpts[i].getAttribute("lat"), lng: wpts[i].getAttribute("lon") }
+        var lat=0.0
+        var lon = 0.0
+        var s0=0
+        var s1=0
+        for (var i = 0; i< wpts.length ; i++) {
+          lat = wpts[i].getAttribute("lat")
+          lon = wpts[i].getAttribute("lon")
+          var time = wpts[i].getElementsByTagName("time")[0].childNodes[0].nodeValue
+          s0 = s1
+          s1 = moment(time)
+          //console.log(s1)
+          var distance = 0
+          var interval = 0
+          if (i>0) {
+            distance = this.getDistanceFromLatLonInKm(lat, lon, wpts[i-1].getAttribute("lat"), wpts[i-1].getAttribute("lon"))
+          }
+          point = { lat: lat, lng: lon , distance: distance, time: s1.diff(s0)/1000, s0: s0, s1: s1}
+
+
            points.push(point)
 
         }
+        //console.log(points)
         var linestring = new H.geo.LineString();
         points.forEach(function(point) {
           linestring.pushPoint(point);
@@ -93,10 +132,10 @@ export default {
           console.log(result)
           this.msg="Position: "+this.lat+ " "+this.lng
         })
-        */        
+        */
       })
-    
-      
+
+
     },
     reverseGeocodingSuccess: function (result) {
       var location = result.Response.View[0].Result[0]
@@ -133,7 +172,7 @@ export default {
           this.msg = "Finding you"
           navigator.geolocation.getCurrentPosition(this.geoSetPosition)
 
-      } else { 
+      } else {
           this.msg = "Geolocation is not supported by this browser.";
       }
     },
