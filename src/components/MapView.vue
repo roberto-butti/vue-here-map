@@ -80,7 +80,7 @@ export default {
 
     loadgpx: function () {
       this.msg="Load GPX..."
-      axios.get('http://localhost:8081/2710885.gpx')
+      axios.get('/sample.gpx')
       .then(response => {
         var self = this
         var text = response.data
@@ -94,6 +94,7 @@ export default {
         var lon = 0.0
         var s0=0
         var s1=0
+        var max_speed = {lat:0.0, lng:0.0, speed:0}
         for (var i = 0; i< wpts.length ; i++) {
           lat = wpts[i].getAttribute("lat")
           lon = wpts[i].getAttribute("lon")
@@ -106,12 +107,22 @@ export default {
           if (i>0) {
             distance = this.getDistanceFromLatLonInKm(lat, lon, wpts[i-1].getAttribute("lat"), wpts[i-1].getAttribute("lon"))
           }
+          var hours = (s1.diff(s0)/1000) / 3600
+          var speed = distance / hours
+          if (speed > max_speed.speed) {
+            max_speed.speed = speed
+            max_speed.lat = lat
+            max_speed.lng = lon
+          }
+          //console.log("Speed:"+ speed + " km/h")
+
           point = { lat: lat, lng: lon , distance: distance, time: s1.diff(s0)/1000, s0: s0, s1: s1}
 
 
            points.push(point)
 
         }
+
         //console.log(points)
         var linestring = new H.geo.LineString();
         points.forEach(function(point) {
@@ -123,7 +134,12 @@ export default {
 
         // Add the polyline to the map:
         this.map.addObject(polyline);
+        var max_speed_coords = {lat: max_speed.lat, lng: max_speed.lng}
+        var max_speed_marker = new H.map.Marker(max_speed_coords)
+        this.map.addObject(max_speed_marker)
 
+        var bubble  =  new H.ui.InfoBubble(max_speed_coords, {content : "Max Speed:"+Math.round(max_speed.speed*100)/100+" Km/h"});
+        this.ui.addBubble(bubble);
         // Zoom the map to make sure the whole polyline is visible:
         this.map.setViewBounds(polyline.getBounds());
 
