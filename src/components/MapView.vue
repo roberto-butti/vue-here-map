@@ -36,7 +36,8 @@ export default {
   mounted: function () {
     this.platform = new H.service.Platform({
       'app_id': process.env.VUE_APP_HERE_APP_ID,
-      'app_code': process.env.VUE_APP_HERE_APP_CODE
+      'app_code': process.env.VUE_APP_HERE_APP_CODE,
+      'useHTTPS': true
     });
     //this.platform.configure(H.map.render.panorama.RenderEngine)
 
