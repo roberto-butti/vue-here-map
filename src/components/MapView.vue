@@ -6,6 +6,8 @@
     <button v-on:click="switchLayerNormalTraffic">Normal Traffic</button>
     <button v-on:click="geolocateme">Find me :)</button>
     <button v-on:click="followPosition">Follow me</button>
+    <button v-on:click="stopFollow">STOP Following me</button>
+
     <button v-on:click="loadgpx">Load GPX</button>
     <div style="width: 100%; height: 480px" id="mapContainer"></div>
   </div>
@@ -30,7 +32,8 @@ export default {
       defaultLayers: null,
       lat: 51.520763,
       lng: -0.102138,
-      msg: "..."
+      msg: "...",
+      idWatch: false
     }
   },
   mounted: function () {
@@ -222,11 +225,20 @@ export default {
             timeout: 5000,
             maximumAge: 0
           }
-          navigator.geolocation.watchPosition(this.geoWatchPosition, this.errorCurrentPosition, options)
+          this.idWatch = navigator.geolocation.watchPosition(this.geoWatchPosition, this.errorCurrentPosition, options)
+          console.log(this.idWatch)
 
       } else {
           this.msg = "Geolocation is not supported by this browser.";
       }
+    },
+
+    stopFollow: function () {
+      if (this.idWatch) {
+        navigator.geolocation.clearWatch(this.idWatch)
+        this.idWatch = false
+      }
+
     },
 
     switchLayerNormalTraffic: function () {
