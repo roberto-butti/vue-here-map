@@ -177,14 +177,22 @@ export default {
       var coords = {lat: this.lat, lng: this.lng}
       this.map.setCenter(coords)
     },
-    geoSetPosition: function (position) {
+    geoSetPosition: function (position, wantReverse = true) {
       console.log(position)
       this.lat = position.coords.latitude
       this.lng = position.coords.longitude
       this.updateCenter()
       this.msg = "Found on: "+this.lat+" "+this.lng
-      this.reverseGeocoding()
+      if (wantReverse) {
+        this.reverseGeocoding()
+      }
+
     },
+
+    geoWatchPosition: function (position) {
+      this.geoSetPosition(position, false)
+    },
+
     errorCurrentPosition: function (err) {
       var strError = 'ERROR('+err.code+'): '+err.message
       console.log(strError)
@@ -207,6 +215,18 @@ export default {
 
     followPosition: function () {
       this.msg ="implementing Follow Me function"
+      if (navigator.geolocation) {
+          this.msg = "I will follow you"
+          var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          }
+          navigator.geolocation.watchPosition(this.geoWatchPosition, this.errorCurrentPosition, options)
+
+      } else {
+          this.msg = "Geolocation is not supported by this browser.";
+      }
     },
 
     switchLayerNormalTraffic: function () {
