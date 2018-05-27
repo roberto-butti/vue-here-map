@@ -5,6 +5,7 @@
     <button v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button>
     <button v-on:click="switchLayerNormalTraffic">Normal Traffic</button>
     <button v-on:click="geolocateme">Find me :)</button>
+    <button v-on:click="followPosition">Follow me</button>
     <button v-on:click="loadgpx">Load GPX</button>
     <div style="width: 100%; height: 480px" id="mapContainer"></div>
   </div>
@@ -183,15 +184,30 @@ export default {
       this.msg = "Found on: "+this.lat+" "+this.lng
       this.reverseGeocoding()
     },
+    errorCurrentPosition: function (err) {
+      var strError = 'ERROR('+err.code+'): '+err.message
+      console.log(strError)
+      this.msg =strError
+    },
     geolocateme: function () {
       if (navigator.geolocation) {
           this.msg = "Finding you"
-          navigator.geolocation.getCurrentPosition(this.geoSetPosition)
+          var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          }
+          navigator.geolocation.getCurrentPosition(this.geoSetPosition, this.errorCurrentPosition, options)
 
       } else {
           this.msg = "Geolocation is not supported by this browser.";
       }
     },
+
+    followPosition: function () {
+      this.msg ="implementing Follow Me function"
+    },
+
     switchLayerNormalTraffic: function () {
         this.map.setBaseLayer(this.defaultLayers.normal.traffic)
     },
