@@ -1,7 +1,20 @@
 <template>
   <div class="map">
 
-    {{ msg }}<br>{{ lat }},{{ lng }}
+    {{ msg }}<br>
+    <table class="table">
+      <tbody>
+        <tr><th>Lat</th><td>{{ lat }}</td></tr>
+        <tr><th>Lng</th><td>{{ lng }}</td></tr>
+        <tr><th>Accuracy</th><td>{{ accuracy }}</td></tr>
+        <tr><th>Altitude</th><td>{{ altitude }}</td></tr>
+        <tr><th>Altitude Accuracy</th><td>{{ altitudeAccuracy }}</td></tr>
+        <tr><th>Speed</th><td>{{ speed }}</td></tr>
+        <tr><th>Heading</th><td>{{ heading }}</td></tr>
+      </tbody>
+    </table>
+
+
     <button v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button>
     <button v-on:click="switchLayerNormalTraffic">Normal Traffic</button>
     <button v-on:click="geolocateme">Find me :)</button>
@@ -32,8 +45,14 @@ export default {
       defaultLayers: null,
       lat: 51.520763,
       lng: -0.102138,
+      accuracy: 0,
+      altitude: 0,
+      altitudeAccuracy: 0,
+      speed: 0,
+      heading: 0,
       msg: "...",
-      idWatch: false
+      idWatch: false,
+      marker: null
     }
   },
   mounted: function () {
@@ -179,11 +198,32 @@ export default {
     updateCenter: function () {
       var coords = {lat: this.lat, lng: this.lng}
       this.map.setCenter(coords)
+
+      if (this.marker == null) {
+        var svgMarkup = '<svg width="24" height="24" ' +
+          'xmlns="http://www.w3.org/2000/svg">' +
+          '<rect stroke="white" fill="#1b468d" x="1" y="1" width="22" ' +
+          'height="22" /><text x="12" y="18" font-size="12pt" ' +
+          'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
+          'fill="white">V</text></svg>';
+        var icon = new H.map.Icon(svgMarkup);
+        this.marker = new H.map.Marker(coords, {icon: icon});
+        this.map.addObject(this.marker);
+      } else {
+        this.marker.setPosition(coords)
+      }
     },
     geoSetPosition: function (position, wantReverse = true) {
       console.log(position)
       this.lat = position.coords.latitude
       this.lng = position.coords.longitude
+      this.accuracy = position.coords.accuracy
+      this.altitude = position.coords.altitude
+      this.altitudeAccuracy = position.coords.altitudeAccuracy
+      this.speed = position.coords.speed
+      this.heading = position.coords.heading
+
+
       this.updateCenter()
       this.msg = "Found on: "+this.lat+" "+this.lng
       if (wantReverse) {
