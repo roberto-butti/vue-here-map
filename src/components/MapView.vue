@@ -2,27 +2,51 @@
   <div class="map">
 
     {{ msg }}<br>
-    <table class="table">
-      <tbody>
-        <tr><th>Lat</th><td>{{ lat }}</td></tr>
-        <tr><th>Lng</th><td>{{ lng }}</td></tr>
-        <tr><th>Accuracy</th><td>{{ accuracy }}</td></tr>
-        <tr><th>Altitude</th><td>{{ altitude }}</td></tr>
-        <tr><th>Altitude Accuracy</th><td>{{ altitudeAccuracy }}</td></tr>
-        <tr><th>Speed</th><td>{{ speed }}</td></tr>
-        <tr><th>Heading</th><td>{{ heading }}</td></tr>
-      </tbody>
-    </table>
+    <aside class="menu">
+      <p class="menu-label">
+        General
+      </p>
+      <ul class="menu-list">
+        <li><button class="button" v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button></li>
+        <li><button class="button" v-on:click="switchLayerNormalTraffic">Normal Traffic</button></li>
+        <li><button class="button" v-on:click="geolocateme">Find me :)</button></li>
+        <li><button class="button" v-on:click="followPosition">Follow me</button></li>
+        <li><button class="button" v-on:click="stopFollow">STOP Following me</button></li>
+        <li><button class="button" v-on:click="loadgpx">Load GPX</button></li>
+      </ul>
+    </aside>
+    <div class="columns ">
+      <div class="column is-one-quarter">
+        <table class="table is-narrow">
+          <tbody>
+            <tr><th>Lat</th><td>{{ lat }}</td></tr>
+            <tr><th>Lng</th><td>{{ lng }}</td></tr>
+            <tr><th>Accuracy</th><td>{{ accuracy }}</td></tr>
+            <tr><th>Altitude</th><td>{{ altitude }}</td></tr>
+            <tr><th>Altitude Accuracy</th><td>{{ altitudeAccuracy }}</td></tr>
+            <tr><th>Speed</th><td>{{ speed }}</td></tr>
+            <tr><th>Heading</th><td>{{ heading }}</td></tr>
+          </tbody>
+        </table>
+
+      </div>
+      <div class="column is-one-quarter">
+        <button class="button" v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button><br>
+        <button class="button" v-on:click="switchLayerNormalTraffic">Normal Traffic</button><br>
+        <button class="button" v-on:click="geolocateme">Find me :)</button><br>
+        <button class="button" v-on:click="followPosition">Follow me</button><br>
+        <button class="button" v-on:click="stopFollow">STOP Following me</button><br>
+        <button class="button" v-on:click="loadgpx">Load GPX</button>
+      </div>
+      <div class="column is-one-half">
+            <div style="width: 100%; height: 480px" id="mapContainer"></div>
+
+      </div>
+    </div>
 
 
-    <button v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button>
-    <button v-on:click="switchLayerNormalTraffic">Normal Traffic</button>
-    <button v-on:click="geolocateme">Find me :)</button>
-    <button v-on:click="followPosition">Follow me</button>
-    <button v-on:click="stopFollow">STOP Following me</button>
 
-    <button v-on:click="loadgpx">Load GPX</button>
-    <div style="width: 100%; height: 480px" id="mapContainer"></div>
+
   </div>
 </template>
 
@@ -223,7 +247,8 @@ export default {
       this.speed = position.coords.speed
       this.heading = position.coords.heading
 
-
+      this.switchLayerSatelliteTraffic()
+      this.map.setZoom(18);
       this.updateCenter()
       this.msg = "Found on: "+this.lat+" "+this.lng
       if (wantReverse) {
