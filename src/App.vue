@@ -1,7 +1,17 @@
 <template>
-  <div id="app">
+  <div>
     <img class="logo" src="./assets/logo.png">
     <MapView  />
+    <footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        <strong>Vue.js -HERE Maps</strong>, an experiment for using Vue.js and HERE Maps.<br>
+        Github repository: <a href="https://github.com/roberto-butti/vue-here-map">https://github.com/roberto-butti/vue-here-map</a>
+      </p>
+    </div>
+  </div>
+</footer>
   </div>
 </template>
 
