@@ -4,7 +4,7 @@
     {{ msg }}<br>
     <aside class="menu">
       <p class="menu-label">
-        General
+
       </p>
       <ul class="menu-list">
         <li><button class="button" v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button></li>
@@ -29,14 +29,6 @@
           </tbody>
         </table>
 
-      </div>
-      <div class="column is-one-quarter">
-        <button class="button" v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button><br>
-        <button class="button" v-on:click="switchLayerNormalTraffic">Normal Traffic</button><br>
-        <button class="button" v-on:click="geolocateme">Find me :)</button><br>
-        <button class="button" v-on:click="followPosition">Follow me</button><br>
-        <button class="button" v-on:click="stopFollow">STOP Following me</button><br>
-        <button class="button" v-on:click="loadgpx">Load GPX</button>
       </div>
       <div class="column is-one-half">
             <div style="width: 100%; height: 480px" id="mapContainer"></div>
