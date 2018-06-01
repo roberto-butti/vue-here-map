@@ -2,20 +2,26 @@
   <div class="map">
 
     {{ msg }}<br>
-    <aside class="menu">
-      <p class="menu-label">
-
-      </p>
-      <ul class="menu-list">
-        <li><button class="button" v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</button></li>
-        <li><button class="button" v-on:click="switchLayerNormalTraffic">Normal Traffic</button></li>
-        <li><button class="button" v-on:click="geolocateme">Find me :)</button></li>
-        <li><button class="button" v-on:click="followPosition">Follow me</button></li>
-        <li><button class="button" v-on:click="stopFollow">STOP Following me</button></li>
-        <li><button class="button" v-on:click="loadgpx">Load GPX</button></li>
-      </ul>
-    </aside>
     <div class="columns ">
+      <div class="column is-one-quarter">
+        <aside class="menu">
+          <p class="menu-label">
+            Operations
+          </p>
+          <ul class="menu-list">
+            <li><a href="#" v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</a></li>
+            <li><a href="#" v-on:click="switchLayerNormalTraffic">Normal Traffic</a></li>
+            <li><a href="#" v-on:click="geolocateme">Find me :)</a></li>
+            <li><a href="#" v-on:click="followPosition">Follow me</a></li>
+            <li><a href="#" v-on:click="stopFollow">STOP Following me</a></li>
+            <li><a href="#" v-on:click="loadgpx">Load GPX</a></li>
+
+
+
+          </ul>
+        </aside>
+
+      </div>
       <div class="column is-one-quarter">
         <table class="table is-narrow">
           <tbody>
@@ -24,7 +30,7 @@
             <tr><th>Accuracy</th><td>{{ accuracy }}</td></tr>
             <tr><th>Altitude</th><td>{{ altitude }}</td></tr>
             <tr><th>Altitude Accuracy</th><td>{{ altitudeAccuracy }}</td></tr>
-            <tr><th>Speed</th><td>{{ speed }}</td></tr>
+            <tr><th>Speed</th><td>{{ speed   }} {{ speed * 3.6   }} km/h</td></tr>
             <tr><th>Heading</th><td>{{ heading }}</td></tr>
           </tbody>
         </table>
@@ -322,14 +328,7 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
+
 a {
   color: #42b983;
 }
