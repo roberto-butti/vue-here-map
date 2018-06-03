@@ -1,17 +1,21 @@
 <template>
   <div>
-    <img class="logo" src="./assets/logo.png">
-    <MapView  />
-    <footer class="footer">
-  <div class="container">
-    <div class="content has-text-centered">
-      <p>
+    <v-app>
+      <v-navigation-drawer app></v-navigation-drawer>
+      <v-toolbar app><img class="logo" src="./assets/logo.png"></v-toolbar>
+      <v-content>
+        <v-container><MapView  /></v-container>
+      </v-content>
+      <v-footer app>
+        <p>
         <strong>Vue.js -HERE Maps</strong>, an experiment for using Vue.js and HERE Maps.<br>
         Github repository: <a href="https://github.com/roberto-butti/vue-here-map">https://github.com/roberto-butti/vue-here-map</a>
       </p>
-    </div>
-  </div>
-</footer>
+      </v-footer>
+    </v-app>
+
+
+
   </div>
 </template>
 
