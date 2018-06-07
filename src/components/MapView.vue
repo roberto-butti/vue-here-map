@@ -1,9 +1,21 @@
 <template>
   <div class="map">
 
-    {{ msg }}<br>
-    <div class="columns ">
-      <div class="column is-one-quarter">
+
+  <v-tabs icons-and-text centered dark color="cyan">
+    <v-tabs-slider color="yellow"></v-tabs-slider>
+    <v-tab href="#tab-info">
+      Information
+      <v-icon>info</v-icon>
+    </v-tab>
+    <v-tab href="#tab-map">
+      Map
+      <v-icon>map</v-icon>
+    </v-tab>
+    <v-tab-item key="1" id="tab-info">
+
+        <v-card flat>
+
         <table class="table is-narrow">
           <tbody>
             <tr><th>Lat</th><td>{{ lat }}</td></tr>
@@ -15,14 +27,17 @@
             <tr><th>Heading</th><td>{{ heading }}</td></tr>
           </tbody>
         </table>
+        <v-card-text>{{ msg }}</v-card-text>
+      </v-card>
+    </v-tab-item>
+    <v-tab-item key="2" id="tab-map">
+      <v-card flat>
+<div style="width: 100%; height: 480px" id="mapContainer"></div>
+        <v-card-text>{{ msg }}</v-card-text>
+      </v-card>
+    </v-tab-item>
 
-      </div>
-      <div class="column is-one-half">
-            <div style="width: 100%; height: 480px" id="mapContainer"></div>
-
-      </div>
-    </div>
-
+  </v-tabs>
 
 
 

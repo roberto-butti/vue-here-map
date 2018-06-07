@@ -24,7 +24,7 @@
 
     </v-navigation-drawer>
     <v-toolbar
-      color="red"
+
       dense
       fixed
       clipped-left
