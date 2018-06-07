@@ -4,25 +4,6 @@
     {{ msg }}<br>
     <div class="columns ">
       <div class="column is-one-quarter">
-        <aside class="menu">
-          <p class="menu-label">
-            Operations
-          </p>
-          <ul class="menu-list">
-            <li><a href="#" v-on:click="switchLayerSatelliteTraffic">Satellite Traffic</a></li>
-            <li><a href="#" v-on:click="switchLayerNormalTraffic">Normal Traffic</a></li>
-            <li><a href="#" v-on:click="geolocateme">Find me :)</a></li>
-            <li><a href="#" v-on:click="followPosition">Follow me</a></li>
-            <li><a href="#" v-on:click="stopFollow">STOP Following me</a></li>
-            <li><a href="#" v-on:click="loadgpx">Load GPX</a></li>
-
-
-
-          </ul>
-        </aside>
-
-      </div>
-      <div class="column is-one-quarter">
         <table class="table is-narrow">
           <tbody>
             <tr><th>Lat</th><td>{{ lat }}</td></tr>
@@ -76,6 +57,17 @@ export default {
       idWatch: false,
       marker: null
     }
+  },
+  created: function () {
+    this.$root.$on('switchLayerSatelliteTraffic', this.switchLayerSatelliteTraffic)
+    this.$root.$on('switchLayerNormalTraffic', this.switchLayerNormalTraffic)
+    this.$root.$on('geolocateme', this.geolocateme)
+    this.$root.$on('followPosition', this.followPosition)
+    this.$root.$on('stopFollow', this.stopFollow)
+    this.$root.$on('loadgpx', this.loadgpx)
+
+
+
   },
   mounted: function () {
     this.platform = new H.service.Platform({
@@ -308,6 +300,7 @@ export default {
         this.map.setBaseLayer(this.defaultLayers.normal.traffic)
     },
     switchLayerSatelliteTraffic: function () {
+      console.log("switchLayerSatelliteTraffic")
         this.map.setBaseLayer(this.defaultLayers.satellite.traffic)
     },
 

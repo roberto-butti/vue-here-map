@@ -7,6 +7,6 @@ Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 
-new Vue({
+const vm = new Vue({
   render: h => h(App)
 }).$mount('#app')

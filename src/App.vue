@@ -1,10 +1,31 @@
 <template>
   <div>
     <v-app>
-      <v-navigation-drawer app></v-navigation-drawer>
+      <v-navigation-drawer
+      fixed
+      clipped
+      v-model="drawer"
+      app
+    >
+
+      <v-list dense>
+        <v-list-tile v-for="item in items" :key="item.text" >
+          <v-list-tile-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+
+            <v-list-tile-title @click="$root.$emit(item.function_handler)">
+              {{ item.text }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+
+    </v-navigation-drawer>
       <v-toolbar app><img class="logo" src="./assets/logo.png"></v-toolbar>
       <v-content>
-        <v-container><MapView  /></v-container>
+        <v-container><MapView ref="map_view" /></v-container>
       </v-content>
       <v-footer app>
         <p>
@@ -22,9 +43,38 @@
 <script>
 
 import MapView from './components/MapView.vue'
+var vm = window.vm
 
 export default {
   name: 'app',
+  data: () => ({
+      drawer: true,
+      items: [
+        { icon: 'trending_up', text: 'Satellite Traffic', function_handler: 'switchLayerSatelliteTraffic' },
+        { icon: 'traffic', text: 'Normal Traffic', function_handler: 'switchLayerNormalTraffic' },
+        {
+          icon: 'location_city',
+          text: 'Find me',
+          function_handler: 'geolocateme'
+        },
+        {
+          icon: 'motorcycle',
+          text: 'Follow me',
+          function_handler: 'followPosition'
+        },
+        {
+          icon: 'stop',
+          text: 'Stop to Follow me',
+          function_handler: 'stopFollow'
+        },
+        {
+          icon: 'cloud_upload',
+          text: 'GPX loader',
+          function_handler: 'loadgpx'
+        },
+
+      ],
+    }),
   components: {
     MapView
   }
