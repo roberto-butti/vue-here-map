@@ -23,7 +23,31 @@
       </v-list>
 
     </v-navigation-drawer>
-      <v-toolbar app><img class="logo" src="./assets/logo.png"></v-toolbar>
+    <v-toolbar
+      color="red"
+      dense
+      fixed
+      clipped-left
+      app
+    >
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+
+      <v-toolbar-title class="mr-5 align-center">
+        <span class="title"><img class="logo" src="./assets/logo.png">UE HERE MAPS</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-layout row align-center style="max-width: 650px">
+        <v-text-field
+          :append-icon-cb="() => {}"
+          placeholder="Search..."
+          single-line
+          append-icon="search"
+          color="white"
+          hide-details
+        ></v-text-field>
+      </v-layout>
+    </v-toolbar>
+
       <v-content>
         <v-container><MapView ref="map_view" /></v-container>
       </v-content>
