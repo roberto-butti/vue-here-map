@@ -52,10 +52,10 @@
         <v-container><MapView ref="map_view" /></v-container>
       </v-content>
       <v-footer app>
-        <p>
-        <strong>Vue.js -HERE Maps</strong>, an experiment for using Vue.js and HERE Maps.<br>
+      
+        <strong>Vue.js -HERE Maps</strong>, an experiment for using Vue.js and HERE Maps.
         Github repository: <a href="https://github.com/roberto-butti/vue-here-map">https://github.com/roberto-butti/vue-here-map</a>
-      </p>
+      
       </v-footer>
     </v-app>
 
@@ -72,7 +72,7 @@ var vm = window.vm
 export default {
   name: 'app',
   data: () => ({
-      drawer: true,
+      drawer: false,
       items: [
         { icon: 'trending_up', text: 'Satellite Traffic', function_handler: 'switchLayerSatelliteTraffic' },
         { icon: 'traffic', text: 'Normal Traffic', function_handler: 'switchLayerNormalTraffic' },

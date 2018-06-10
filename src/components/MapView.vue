@@ -1,21 +1,21 @@
 <template>
   <div class="map">
-
-
-  <v-tabs icons-and-text centered dark color="cyan">
-    <v-tabs-slider color="yellow"></v-tabs-slider>
-    <v-tab href="#tab-info">
-      Information
-      <v-icon>info</v-icon>
-    </v-tab>
-    <v-tab href="#tab-map">
-      Map
-      <v-icon>map</v-icon>
-    </v-tab>
-    <v-tab-item key="1" id="tab-info">
-
-        <v-card flat>
-
+    <div class="operation">
+      <v-btn color="primary" dark @click.stop="focus_map">Refresh</v-btn>
+    </div>
+    <v-tabs icons-and-text centered dark color="cyan">  
+      <v-tab href="#tab-map" @click="focus_map">
+        Map
+        <v-icon>map</v-icon>
+      </v-tab>
+      <v-tab href="#tab-info">
+        Information
+        <v-icon>info</v-icon>
+      </v-tab>
+      <v-tab-item key="1" id="tab-map"  >
+        <div style="width: 100%; height: 480px; z-index=auto" id="mapContainer"></div>
+      </v-tab-item>
+      <v-tab-item key="2" id="tab-info">
         <table class="table is-narrow">
           <tbody>
             <tr><th>Lat</th><td>{{ lat }}</td></tr>
@@ -27,19 +27,8 @@
             <tr><th>Heading</th><td>{{ heading }}</td></tr>
           </tbody>
         </table>
-        <v-card-text>{{ msg }}</v-card-text>
-      </v-card>
-    </v-tab-item>
-    <v-tab-item key="2" id="tab-map">
-      <v-card flat>
-<div style="width: 100%; height: 480px" id="mapContainer"></div>
-        <v-card-text>{{ msg }}</v-card-text>
-      </v-card>
-    </v-tab-item>
-
-  </v-tabs>
-
-
+      </v-tab-item>
+    </v-tabs>
 
   </div>
 </template>
@@ -70,29 +59,30 @@ export default {
       heading: 0,
       msg: "...",
       idWatch: false,
-      marker: null
+      marker: null,
+      dialog: false
     }
   },
-  created: function () {
+
+created: function () {
     this.$root.$on('switchLayerSatelliteTraffic', this.switchLayerSatelliteTraffic)
     this.$root.$on('switchLayerNormalTraffic', this.switchLayerNormalTraffic)
     this.$root.$on('geolocateme', this.geolocateme)
     this.$root.$on('followPosition', this.followPosition)
     this.$root.$on('stopFollow', this.stopFollow)
     this.$root.$on('loadgpx', this.loadgpx)
-
-
-
   },
-  mounted: function () {
+
+mounted: function () {
     this.platform = new H.service.Platform({
       'app_id': process.env.VUE_APP_HERE_APP_ID,
       'app_code': process.env.VUE_APP_HERE_APP_CODE,
       'useHTTPS': true
     });
     //this.platform.configure(H.map.render.panorama.RenderEngine)
-
     var zoom_default =14
+    // if you need to customize the BaseLayer:
+    // https://developer.here.com/documentation/maps/topics/map-types.html
     this.defaultLayers = this.platform.createDefaultLayers();
     this.map = new H.Map(
       document.getElementById('mapContainer'),
@@ -107,11 +97,16 @@ export default {
     this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
 
     this.useMetricMeasurements(this.map, this.defaultLayers);
-
-
+    //this.map.getViewPort().resize();
 
   },
   methods: {
+
+    focus_map: function () {
+      console.log("Focus map");
+      this.map.getViewPort().resize();
+    },
+
     getDistanceFromLatLonInKm: function (lat1,lon1,lat2,lon2) {
       var R = 6371 // Radius of the earth in km
       var dLat = this.deg2rad(lat2-lat1)  // deg2rad below
@@ -210,6 +205,7 @@ export default {
       var location = result.Response.View[0].Result[0]
       this.msg = location.Location.Address.Label
     },
+
     reverseGeocoding: function () {
       var reverseGeocodingParameters = {
         prox: ''+this.lat+','+this.lng+',150',
@@ -224,6 +220,7 @@ export default {
 
 
     },
+
     updateCenter: function () {
       var coords = {lat: this.lat, lng: this.lng}
       this.map.setCenter(coords)
@@ -238,10 +235,12 @@ export default {
         var icon = new H.map.Icon(svgMarkup);
         this.marker = new H.map.Marker(coords, {icon: icon});
         this.map.addObject(this.marker);
+
       } else {
         this.marker.setPosition(coords)
       }
     },
+    
     geoSetPosition: function (position, wantReverse = true) {
       console.log(position)
       this.lat = position.coords.latitude
@@ -284,6 +283,7 @@ export default {
       } else {
           this.msg = "Geolocation is not supported by this browser.";
       }
+      this.map.getViewPort().resize();
     },
 
     followPosition: function () {
