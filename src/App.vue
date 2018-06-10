@@ -1,12 +1,11 @@
 <template>
-  <div>
-    <v-app>
-      <v-navigation-drawer
-      fixed
-      clipped
-      v-model="drawer"
-      app
-    >
+  <v-app>
+    <v-navigation-drawer
+    fixed
+    clipped
+    v-model="drawer"
+    app
+  >
 
       <v-list dense>
         <v-list-tile v-for="item in items" :key="item.text" >
@@ -48,20 +47,23 @@
       </v-layout>
     </v-toolbar>
 
-      <v-content>
-        <v-container fluid><MapView ref="map_view" /></v-container>
-      </v-content>
-      <v-footer app>
-      
-        <strong>Vue.js -HERE Maps</strong>, an experiment for using Vue.js and HERE Maps.
-        Github repository: <a href="https://github.com/roberto-butti/vue-here-map">https://github.com/roberto-butti/vue-here-map</a>
-      
-      </v-footer>
-    </v-app>
+    <v-content>
+      <v-container fluid >
+        
+        <MapView ref="map_view" />
+        
+      </v-container>
+    </v-content>
+    <v-footer app>
+    
+      <strong>Vue.js -HERE Maps</strong>, an experiment for using Vue.js and HERE Maps.
+      Github repository: <a href="https://github.com/roberto-butti/vue-here-map">https://github.com/roberto-butti/vue-here-map</a>
+    
+    </v-footer>
+  </v-app>
 
 
 
-  </div>
 </template>
 
 <script>
@@ -106,14 +108,6 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 img.logo {
   width: 32px;
 }
