@@ -49,7 +49,7 @@
     </v-toolbar>
 
       <v-content>
-        <v-container><MapView ref="map_view" /></v-container>
+        <v-container fluid><MapView ref="map_view" /></v-container>
       </v-content>
       <v-footer app>
       

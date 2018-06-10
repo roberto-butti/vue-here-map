@@ -1,21 +1,13 @@
 <template>
   <div class="map">
-    <div class="operation">
-      <v-btn color="primary" dark @click.stop="focus_map">Refresh</v-btn>
+        <div class="operation">
+      
+      <v-btn color="primary" dark @click.stop="show_info = true">Info</v-btn>
     </div>
-    <v-tabs icons-and-text centered dark color="cyan">  
-      <v-tab href="#tab-map" @click="focus_map">
-        Map
-        <v-icon>map</v-icon>
-      </v-tab>
-      <v-tab href="#tab-info">
-        Information
-        <v-icon>info</v-icon>
-      </v-tab>
-      <v-tab-item key="1" id="tab-map"  >
-        <div style="width: 100%; height: 480px; z-index=auto" id="mapContainer"></div>
-      </v-tab-item>
-      <v-tab-item key="2" id="tab-info">
+
+    <div style="width: 100%; height: 480px; z-index=auto" id="mapContainer"></div>
+    <v-bottom-sheet v-model="show_info">
+      <v-card tile>
         <table class="table is-narrow">
           <tbody>
             <tr><th>Lat</th><td>{{ lat }}</td></tr>
@@ -27,9 +19,8 @@
             <tr><th>Heading</th><td>{{ heading }}</td></tr>
           </tbody>
         </table>
-      </v-tab-item>
-    </v-tabs>
-
+      </v-card>
+    </v-bottom-sheet>
   </div>
 </template>
 
@@ -60,7 +51,8 @@ export default {
       msg: "...",
       idWatch: false,
       marker: null,
-      dialog: false
+      dialog: false,
+      show_info: false
     }
   },
 
@@ -240,7 +232,7 @@ mounted: function () {
         this.marker.setPosition(coords)
       }
     },
-    
+
     geoSetPosition: function (position, wantReverse = true) {
       console.log(position)
       this.lat = position.coords.latitude
