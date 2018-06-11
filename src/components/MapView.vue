@@ -1,7 +1,6 @@
 <template>
   <div class="map">
-        <div class="operation">
-      
+    <div class="operation">
       <v-btn color="primary" dark @click.stop="show_info = true">Info</v-btn>
     </div>
 
@@ -21,6 +20,19 @@
         </table>
       </v-card>
     </v-bottom-sheet>
+    <v-btn
+      fab
+      bottom
+      right
+      color="pink"
+      dark
+      fixed
+      @click.stop="geolocateme"
+    >
+
+      <v-icon v-if="!loading">room</v-icon>
+      <v-progress-circular  v-if="loading" indeterminate color="primary"></v-progress-circular>
+    </v-btn>
   </div>
 </template>
 
@@ -52,7 +64,8 @@ export default {
       idWatch: false,
       marker: null,
       dialog: false,
-      show_info: false
+      show_info: false,
+      loading: false
     }
   },
 
@@ -89,6 +102,16 @@ mounted: function () {
     this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
 
     this.useMetricMeasurements(this.map, this.defaultLayers);
+
+    renderControls({
+        // Key is a button label and value is an click/tap callback
+        'Normal Traffic': function () {
+          this.switchLayerNormalTraffic()
+        },
+        'Satellite': function () {
+          this.switchLayerSatelliteTraffic()
+        }
+      });
     //this.map.getViewPort().resize();
 
   },
@@ -250,6 +273,7 @@ mounted: function () {
       if (wantReverse) {
         this.reverseGeocoding()
       }
+      this.loading=false
 
     },
 
@@ -261,6 +285,7 @@ mounted: function () {
       var strError = 'ERROR('+err.code+'): '+err.message
       console.log(strError)
       this.msg =strError
+      this.loading=false
     },
     geolocateme: function () {
       if (navigator.geolocation) {
@@ -270,6 +295,7 @@ mounted: function () {
             timeout: 5000,
             maximumAge: 0
           }
+          this.loading = true
           navigator.geolocation.getCurrentPosition(this.geoSetPosition, this.errorCurrentPosition, options)
 
       } else {
