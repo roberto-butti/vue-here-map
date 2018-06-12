@@ -2,10 +2,20 @@
   <v-navigation-drawer
     v-model="drawer"
     app
-    clipped
+    clipped="true"
   >
-  <v-list >
-    <v-list-tile v-for="item in items" :key="item.text"   >
+  <v-toolbar flat>
+    <v-list>
+      <v-list-tile>
+        <v-list-tile-title class="title">
+          Operations
+        </v-list-tile-title>
+      </v-list-tile>
+    </v-list>
+  </v-toolbar>
+<v-divider></v-divider>
+  <v-list  class="pt-0">
+    <v-list-tile v-for="item in items" :key="item.text"  @click="">
       <v-list-tile-action>
         <v-icon>{{ item.icon }}</v-icon>
       </v-list-tile-action>
