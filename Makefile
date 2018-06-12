@@ -1,4 +1,4 @@
-.PHONY: help
+.PHONY: help deploy build webserver
 
 .DEFAULT_GOAL := help
 
@@ -10,6 +10,9 @@ deploy: ## Deploy on Surge.sh
 
 build: ## Build assets into dist/ directory
 	npm run build
+
+webserver: ## Run internal webserver
+	npm run serve
 
 
 world: build deploy ## Build files and deploy them
