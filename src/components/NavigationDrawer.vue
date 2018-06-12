@@ -32,7 +32,7 @@ export default {
 
   data: function () {
     return {
-      drawer: true,
+      drawer: false,
       items: [
         { icon: 'trending_up', text: 'Satellite Traffic', function_handler: 'switchLayerSatelliteTraffic' },
         { icon: 'traffic', text: 'Normal Traffic', function_handler: 'switchLayerNormalTraffic' },

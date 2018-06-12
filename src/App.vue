@@ -17,6 +17,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-layout row align-center style="max-width: 650px">
+        <v-btn color="primary" dark @click.stop="$root.$emit('showInfo')">Info</v-btn>
         <v-text-field
           :append-icon-cb="() => {}"
           placeholder="Search..."

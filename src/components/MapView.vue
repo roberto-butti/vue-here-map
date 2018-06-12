@@ -1,8 +1,6 @@
 <template>
   <div class="map">
-    <div class="operation">
-      <v-btn color="primary" dark @click.stop="show_info = true">Info</v-btn>
-    </div>
+
 
     <div style="width: 100%; height: 480px; z-index=auto" id="mapContainer"></div>
     <v-bottom-sheet v-model="show_info">
@@ -76,6 +74,7 @@ created: function () {
     this.$root.$on('followPosition', this.followPosition)
     this.$root.$on('stopFollow', this.stopFollow)
     this.$root.$on('loadgpx', this.loadgpx)
+    this.$root.$on('showInfo', this.showInfo)
   },
 
 mounted: function () {
@@ -103,20 +102,16 @@ mounted: function () {
 
     this.useMetricMeasurements(this.map, this.defaultLayers);
 
-    renderControls({
-        // Key is a button label and value is an click/tap callback
-        'Normal Traffic': function () {
-          this.switchLayerNormalTraffic()
-        },
-        'Satellite': function () {
-          this.switchLayerSatelliteTraffic()
-        }
-      });
+
     //this.map.getViewPort().resize();
 
   },
   methods: {
 
+    showInfo: function () {
+      console.log("Show INfo")
+      this.show_info = true
+    },
     focus_map: function () {
       console.log("Focus map");
       this.map.getViewPort().resize();
