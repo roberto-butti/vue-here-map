@@ -24,13 +24,28 @@
       right
       color="pink"
       dark
-      fixed
+
+      @click.stop="followPosition"
+    >
+
+      <v-icon v-if="!loading_followme">search</v-icon>
+      <v-progress-circular  v-if="loading_followme" indeterminate color="primary"></v-progress-circular>
+    </v-btn>
+    <v-btn
+      fab
+      bottom
+      right
+      color="pink"
+      dark
+
       @click.stop="geolocateme"
     >
 
       <v-icon v-if="!loading">room</v-icon>
       <v-progress-circular  v-if="loading" indeterminate color="primary"></v-progress-circular>
     </v-btn>
+    <div>{{ msg }}</div>
+
   </div>
 </template>
 
@@ -63,7 +78,9 @@ export default {
       marker: null,
       dialog: false,
       show_info: false,
-      loading: false
+      loading: false,
+      loading_followme:false,
+      fab: true
     }
   },
 
@@ -274,6 +291,7 @@ mounted: function () {
 
     geoWatchPosition: function (position) {
       this.geoSetPosition(position, false)
+      this.loading_followme=false
     },
 
     errorCurrentPosition: function (err) {
@@ -281,6 +299,7 @@ mounted: function () {
       console.log(strError)
       this.msg =strError
       this.loading=false
+      this.loading_followme=false
     },
     geolocateme: function () {
       if (navigator.geolocation) {
@@ -308,6 +327,7 @@ mounted: function () {
             timeout: 5000,
             maximumAge: 0
           }
+          this.loading_followme=true
           this.idWatch = navigator.geolocation.watchPosition(this.geoWatchPosition, this.errorCurrentPosition, options)
           console.log(this.idWatch)
 

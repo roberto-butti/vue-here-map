@@ -2,7 +2,7 @@
   <v-navigation-drawer
     v-model="drawer"
     app
-    clipped="true"
+    clipped
   >
   <v-toolbar flat>
     <v-list>
